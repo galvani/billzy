@@ -1,18 +1,12 @@
 version: '3.1'
 services:
+  # Use root/example as user/password credentials
   mongo:
-    image: mongo:latest
-    container_name: mongodb
+    image: mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-    ports:
-      - 27017:27017
-    expose:
-      - 27017
-    volumes:
-      - mongo-data:/data/db
 
   mongo-express:
     image: mongo-express
@@ -34,6 +28,9 @@ services:
     depends_on:
       - mongo
       - database
+    volumes:
+      - .:/var/www/html
+
 
 ###> doctrine/doctrine-bundle ###
   database:
