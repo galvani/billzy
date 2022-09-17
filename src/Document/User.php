@@ -18,7 +18,7 @@ class User extends SecurityUser implements UserInterface, PasswordAuthenticatedU
 
     /**
      * @MongoDB\Field(type="string")
-     * @MongoDB\UniqueIndex(order="asc")
+     * @MongoDB\UniqueIndex
      */
     #[Assert\NotBlank]
     #[Assert\Email]
