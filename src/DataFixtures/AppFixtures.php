@@ -27,7 +27,9 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
             ->setCity('Praha 1')
             ->setCountry('CZ') //Countries::getCountryCodes());
             ->setCity('Praha 1')
-            ->setEmail('galvani78@gmail.com');
+            ->setEmail('galvani78@gmail.com')
+            ->setOwnerId(UserFixtures::ADMIN_USER_REFERENCE)
+        ;
 
         $manager->persist($contact);
 

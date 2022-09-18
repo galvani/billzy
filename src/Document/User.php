@@ -11,7 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @MongoDB\Document(collection="users")
  */
-class User extends SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
+class
+User extends SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /** @MongoDB\Id */
     private string $id;
@@ -35,6 +36,14 @@ class User extends SecurityUser implements UserInterface, PasswordAuthenticatedU
     #[Assert\NotBlank]
     private string $password;
 
+    /** @MongoDB\EmbedOne("Contact")  */
+    private Contact $contact;
+
+    /**
+     * @MongoDB\EmbedMany(targetDocument=Contact::class)
+     * @var Contact[]
+     */
+    private array $contacts;
 
     /**
      * A visual identifier that represents this user.
@@ -88,5 +97,50 @@ class User extends SecurityUser implements UserInterface, PasswordAuthenticatedU
     public function getSalt()
     {
         // TODO: Implement getSalt() method.
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    /** @return Contact[] */
+    public function getContacts(): array
+    {
+        return $this->contacts;
+    }
+
+    public function setContacts(array $contacts): User
+    {
+        $this->contacts = $contacts;
+        return $this;
+    }
+
+    public function getContact(): Contact
+    {
+        return $this->contact;
+    }
+
+    public function setContact(Contact $contact): self
+    {
+        $this->contact = $contact;
+        return $this;
     }
 }

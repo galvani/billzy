@@ -2,23 +2,20 @@
 
 namespace App\DataFixtures;
 
+use App\Config\UserRoleEnum;
 use App\Document\Contact;
 use App\Document\User;
-use App\Models\UserRole;
+#use App\Models\UserRole; // @TODO Implement
 use Doctrine\Bundle\MongoDBBundle\Fixture\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserFixtures extends Fixture implements DependentFixtureInterface
+class UserFixtures extends Fixture
 {
     public const ADMIN_USER_REFERENCE = 'admin-user';
 
-    private UserPasswordEncoderInterface $passwordEncoder;
-
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
-        $this->passwordEncoder = $passwordEncoder;
     }
 
     public function load(ObjectManager $manager)
@@ -35,8 +32,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $admin = new User();
         $admin
             ->setEmail('galvani78@gmail.com')
-            ->setRoles([UserRole::ROLE_SUPER_ADMIN])
-            ->setPassword($this->passwordEncoder->encodePassword($admin,'changeMe'))
+            ->setRoles([UserRoleEnum::ROLE_SUPER_ADMIN])
+            ->setPassword($this->passwordHasher->hashPassword($admin, 'changeMe'))
             ->setContact($contact);
         ;
 
@@ -44,13 +41,4 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
         $this->addReference(self::ADMIN_USER_REFERENCE, $admin);
     }
-
-    public function getDependencies()
-    {
-        return [
-            AppFixtures::class
-        ];
-    }
-
-
 }

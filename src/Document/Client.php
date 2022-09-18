@@ -28,7 +28,7 @@ class Client
      * @MongoDB\EmbedMany(targetDocument=ClientContact::class)
      * @var ClientContact[]
      */
-    protected array $contacts;
+    protected $contacts;
 
     public function __construct()
     {

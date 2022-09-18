@@ -2,11 +2,9 @@
 
 namespace App\Config;
 
-use Symfony\Component\Form\Extension\Core\Type\EnumType;
-
 enum PaymentTypeEnum: string
 {
-    case Incoming = 'Left/Start aligned';
-    case Outgoing = 'Center/Middle aligned';
-    case Transfer = 'Right/End aligned';
+    case Incoming = 'Incoming Payment will be paid to user';
+    case Outgoing = 'Outgoing Payment will sent to client';
+    case Transfer = 'Transfer of means between accounts. Not Implemented';
 }

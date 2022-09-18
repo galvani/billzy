@@ -3,8 +3,8 @@
 namespace App\DataFixtures;
 
 use App\Document\Client;
+use App\Document\Embedded\InvoiceItem;
 use App\Document\Invoice;
-use App\Document\InvoiceItem;
 use App\Document\Payment;
 use Doctrine\Bundle\MongoDBBundle\Fixture\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -15,11 +15,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class InvoiceFixtures extends Fixture implements DependentFixtureInterface
 {
-    private UserPasswordEncoderInterface $passwordEncoder;
-
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct()
     {
-        $this->passwordEncoder = $passwordEncoder;
     }
 
     public function load(ObjectManager $manager)
@@ -75,8 +72,7 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            AppFixtures::class,
-            UserFixtures::class
+            AppFixtures::class
         ];
     }
 
