@@ -46,9 +46,7 @@ class User extends SecurityUser implements UserInterface, PasswordAuthenticatedU
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
+    /** @see UserInterface */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -56,6 +54,10 @@ class User extends SecurityUser implements UserInterface, PasswordAuthenticatedU
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
+    }
+
+    public function hasRole(string $role): bool {
+        return in_array($role, $this->getRoles(), true);
     }
 
     public function setRoles(array $roles): self

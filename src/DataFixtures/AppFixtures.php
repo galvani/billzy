@@ -1,42 +1,46 @@
 <?php
-declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use App\Document\EmbeddedDocument\UserProfile;
-use App\Document\User;
+use App\Document\Client;
+use App\Document\Contact;
+use App\Document\Factory\ClientContactFactory;
+use App\Document\Factory\DocumentConverter;
 use Doctrine\Bundle\MongoDBBundle\Fixture\Fixture;
-use Doctrine\Bundle\MongoDBBundle\Fixture\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class AppFixtures extends Fixture implements FixtureGroupInterface
+class AppFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const ADMIN_USER_REFERENCE = 'user-galvani';
+    use DocumentConverter;
 
-    public function __construct(private UserPasswordHasherInterface $passwordHasher)
+    public function getDependencies(): array
     {
-    }
-
-    public static function getGroups(): array
-    {
-        return [];
+        return [UserFixtures::class];
     }
 
     public function load(ObjectManager $manager): void
     {
-        $profile = (new UserProfile())
+        $contact = new Contact();
+        $contact
+            ->setName('Jan Kozák')
+            ->setCity('Praha 1')
+            ->setCountry('CZ') //Countries::getCountryCodes());
+            ->setCity('Praha 1')
             ->setEmail('galvani78@gmail.com');
 
-        $user = (new User())
-            ->setProfile($profile)
-            ->setUsername('galvani78@gmail.com');
+        $manager->persist($contact);
 
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'password'));
+        $clientContact = ClientContactFactory::createFromContact($contact);
 
-        $manager->persist($user);
+        $client = new Client();
+        $client
+            ->setCompany('Galvani Innovations')
+            ->addContact($clientContact)
+            ->setTaxId('CZ7802070012')
+            ->setUnitPrice(800);
+
+        $manager->persist($client);
         $manager->flush();
-
-        $this->addReference(self::ADMIN_USER_REFERENCE, $user);
     }
 }
